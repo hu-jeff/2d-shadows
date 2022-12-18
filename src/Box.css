@@ -1,7 +1,7 @@
 .box {
-    width: 50px;
-    height: 50px;
-    background-color: black;
+    width: 100px;
+    height: 100px;
+    background-color: #87ceeb;
     position:relative;
 
     animation: rotate infinite 30s linear;
@@ -10,20 +10,23 @@
 .box > div {
     width: 5px;
     height: 5px;
-    background-color: lightblue;
+    background-color: darkblue;
     position: absolute;
 }
 
 .top-right-corner {
+    background-color: white;
     right: 0;
 }
 
 .bottom-right-corner {
+    background-color: green;
     right: 0;
     bottom: 0
 }
 
 .bottom-left-corner {
+    background-color: blue;
     bottom: 0;
 }
 

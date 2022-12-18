@@ -10,3 +10,17 @@
   width: 50vw;
   height: 50vh;
 }
+
+.test {
+  width: 5px;
+  height: 5px;
+  background-color: purple;
+  position: absolute;
+}
+
+.corner {
+  width: 5px;
+  height: 5px;
+  background-color: yellow;
+  position: absolute;
+}
