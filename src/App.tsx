@@ -60,7 +60,7 @@ function App() {
 
     const mouseMoveHandler = useMemo(() => throttle((e: React.MouseEvent) => {
         setMousePosition({x: e.clientX, y: e.clientY});
-    }, 100), [])
+    }, 10), [])
 
     const checkAngle = (angle1:number, angle2: number) => {
         return (angle1 <= 3.14159 / 2 && angle2 > 3.14159/2) || (angle1 > 3.14159 / 2 && angle2 <= 3.14159/2)
@@ -91,6 +91,7 @@ function App() {
         }
 
         const m = stateRef.current
+        const screen = screenRef.current.screen
 
         const ca = unit(sub(a,c)) //unit a-c
         const ma = unit(sub(a, stateRef.current)) // unit a - mousePosition
@@ -126,6 +127,8 @@ function App() {
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
             }
+            setShadowEndPoints = setShadowEndPoints2
+
         }
 
 
@@ -142,7 +145,7 @@ function App() {
 
             const [b1, b2] = [b.x, b.y]
             const [a1, a2] = [m.x, m.y]
-            if (ma.y <= 0) { //vector heading towards top of screen
+            if (mb.y <= 0) { //vector heading towards top of screen
                 const x =(b1-a1)/(b2-a2)*(-a2)+a1
                 if (x< 0) {
                     setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
@@ -156,13 +159,15 @@ function App() {
             } else {
                 const x = (b1-a1)/(b2-a2)*(screen.innerHeight) +(b1-a1)/(b2-a2)*(-a2)+a1
                 if (x < 0) {
-                    setShadowEndPoints({x: 0, y:(b2-a2)/(b1-a1)*(-a1)+a2 })
+                    setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
                 } else if (x > screen.innerWidth) {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
             }
+            setShadowEndPoints = setShadowEndPoints2
+
         }
 
         const ac = unit(sub(c,a))
@@ -178,7 +183,7 @@ function App() {
 
             const [b1, b2] = [c.x, c.y]
             const [a1, a2] = [m.x, m.y]
-            if (ma.y <= 0) { //vector heading towards top of screen
+            if (mc.y <= 0) { //vector heading towards top of screen
                 const x =(b1-a1)/(b2-a2)*(-a2)+a1
                 if (x< 0) {
                     setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
@@ -198,6 +203,8 @@ function App() {
                 } else {
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
+
+                setShadowEndPoints = setShadowEndPoints2
             }
         }
 
@@ -213,7 +220,7 @@ function App() {
 
             const [b1, b2] = [d.x, d.y]
             const [a1, a2] = [m.x, m.y]
-            if (ma.y <= 0) { //vector heading towards top of screen
+            if (md.y <= 0) { //vector heading towards top of screen
                 const x =(b1-a1)/(b2-a2)*(-a2)+a1
                 if (x< 0) {
                     setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
@@ -233,10 +240,13 @@ function App() {
                 } else {
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
+
+                setShadowEndPoints = setShadowEndPoints2
             }
         }
+        console.log(corners.a.y)
 
-        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} ${shadowEndPoints.a.x},${shadowEndPoints.a.y} ${shadowEndPoints.b.x},${shadowEndPoints.b.y}`)
+        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} ${shadowEndPoints.b.x},${shadowEndPoints.b.y} ${shadowEndPoints.a.x},${shadowEndPoints.a.y}`)
 
         // const temp3 = unit(add(sub(a, b), a))  // unit a-b + a
 
@@ -262,6 +272,11 @@ function App() {
 
   return (
     <div className="App" onMouseMove={mouseMoveHandler}>
+        <svg viewBox={`0 0 ${screen.innerWidth} ${screen.innerHeight}`} style={{ //default 455 height
+            position: "absolute",
+        }}>
+            <polygon points = {shadowMatrix}/>
+        </svg>
         <div className="box-holder">
             <Box sendPos = {positionsHandler}/>
         </div>
@@ -288,11 +303,7 @@ function App() {
         }}>
         </div>
 
-        <svg viewBox={'0 0 1440 455'} style={{
-            position: "absolute",
-        }}>
-            <polygon points = {shadowMatrix}/>
-        </svg>
+
     </div>
   );
 }
