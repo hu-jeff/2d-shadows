@@ -20,4 +20,17 @@ So, I realized I could check the unit vectors on a point that are normal to a su
 
 As shown here,
 
-![corners](https://user-images.githubusercontent.com/59699807/208304424-7e19023d-4d98-464a-9273-12e0f40921dc.gif)
+![ccorners](https://user-images.githubusercontent.com/59699807/208322308-bb729fef-4c68-4c80-8c45-243a18475112.gif)
+
+To cast shadows, I determined the intersection between the screen and the line formed by extending the vector from the mouse to the corner.
+
+I seperated the calculations into 2 cases,
+
+Let $v$ be the mouse vector.
+
+If $v.y < 0$, I checked for an intersection when $y=0$. Since the mouse vector was going towards the top of the screen.
+This way, we can find the $x$ value that would exist when $y=0$ so,
+
+\[
+y=5
+\]
