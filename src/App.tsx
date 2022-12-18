@@ -33,6 +33,14 @@ function App() {
     const setc2ref = useRef(setc2)
     setc2ref.current = setc2
 
+    const [shadowMatrix, setShadowMatrix] = useState('')
+    const setShadowMatrixref = useRef(setShadowMatrix)
+    setShadowMatrixref.current = setShadowMatrix
+
+    const [screen, setScreen] = useState({innerWidth: window.innerWidth, innerHeight: window.innerHeight})
+    const screenRef = useRef({screen: screen, setScreen: setScreen})
+    screenRef.current = {screen: screen, setScreen: setScreen}
+
     const dot = (u: Vector, v:Vector) => {
         return u.x * v.x + u.y * v.y
     }
@@ -60,7 +68,29 @@ function App() {
 
     const positionsHandler = ({a,b,c,d,e}: {a: Vector, b: Vector, c: Vector, d: Vector, e:Vector}) => {
         //c to a on a
-        let changeCorner = setc1ref.current
+
+        const corners = {a: {x:0, y:0}, b: {x:0,y:0}}
+        let changeCorner = (a: Vector) => {
+            setc1ref.current(a)
+            corners.a = a
+        }
+
+        const changeCorner2 = (a: Vector) => {
+            setc2ref.current(a)
+            corners.b = a
+        }
+
+        const shadowEndPoints = {a: {x:0, y:0}, b: {x:0,y:0}}
+
+        let setShadowEndPoints = (a: Vector) => {
+            shadowEndPoints.a = a
+        }
+
+        const setShadowEndPoints2 = (a: Vector) => {
+            shadowEndPoints.b = a
+        }
+
+        const m = stateRef.current
 
         const ca = unit(sub(a,c)) //unit a-c
         const ma = unit(sub(a, stateRef.current)) // unit a - mousePosition
@@ -71,8 +101,33 @@ function App() {
 
         if (checkAngle(angletl, angletl2)) {
             changeCorner(a);
-            changeCorner = setc2ref.current
+            changeCorner = changeCorner2
+
+            const [b1, b2] = [a.x, a.y]
+            const [a1, a2] = [m.x, m.y]
+            if (ma.y <= 0) { //vector heading towards top of screen
+                const x =(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x< 0) {
+                    setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: 0})
+                }
+
+                setShadowEndPoints = setShadowEndPoints2
+            } else {
+                const x = (b1-a1)/(b2-a2)*(screen.innerHeight) +(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x < 0) {
+                    setShadowEndPoints({x: 0, y:(b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: screen.innerHeight})
+                }
+            }
         }
+
 
         const ab = unit(sub(b,a))
         const mb = unit(sub(b, stateRef.current))
@@ -83,7 +138,31 @@ function App() {
 
         if (checkAngle(angletr, angletr2)) {
             changeCorner(b)
-            changeCorner = setc2ref.current
+            changeCorner = changeCorner2
+
+            const [b1, b2] = [b.x, b.y]
+            const [a1, a2] = [m.x, m.y]
+            if (ma.y <= 0) { //vector heading towards top of screen
+                const x =(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x< 0) {
+                    setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: 0})
+                }
+
+                setShadowEndPoints = setShadowEndPoints2
+            } else {
+                const x = (b1-a1)/(b2-a2)*(screen.innerHeight) +(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x < 0) {
+                    setShadowEndPoints({x: 0, y:(b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: screen.innerHeight})
+                }
+            }
         }
 
         const ac = unit(sub(c,a))
@@ -95,7 +174,31 @@ function App() {
 
         if (checkAngle(anglebl, anglebl2)) {
             changeCorner(c)
-            changeCorner = setc2ref.current
+            changeCorner = changeCorner2
+
+            const [b1, b2] = [c.x, c.y]
+            const [a1, a2] = [m.x, m.y]
+            if (ma.y <= 0) { //vector heading towards top of screen
+                const x =(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x< 0) {
+                    setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: 0})
+                }
+
+                setShadowEndPoints = setShadowEndPoints2
+            } else {
+                const x = (b1-a1)/(b2-a2)*(screen.innerHeight) +(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x < 0) {
+                    setShadowEndPoints({x: 0, y:(b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: screen.innerHeight})
+                }
+            }
         }
 
         const bd = unit(sub(d,b))
@@ -107,7 +210,33 @@ function App() {
 
         if (checkAngle(anglebr, anglebr2)) {
             changeCorner(d)
+
+            const [b1, b2] = [d.x, d.y]
+            const [a1, a2] = [m.x, m.y]
+            if (ma.y <= 0) { //vector heading towards top of screen
+                const x =(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x< 0) {
+                    setShadowEndPoints({x: 0,y: (b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: 0})
+                }
+
+                setShadowEndPoints = setShadowEndPoints2
+            } else {
+                const x = (b1-a1)/(b2-a2)*(screen.innerHeight) +(b1-a1)/(b2-a2)*(-a2)+a1
+                if (x < 0) {
+                    setShadowEndPoints({x: 0, y:(b2-a2)/(b1-a1)*(-a1)+a2 })
+                } else if (x > screen.innerWidth) {
+                    setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
+                } else {
+                    setShadowEndPoints({x: x, y: screen.innerHeight})
+                }
+            }
         }
+
+        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} ${shadowEndPoints.a.x},${shadowEndPoints.a.y} ${shadowEndPoints.b.x},${shadowEndPoints.b.y}`)
 
         // const temp3 = unit(add(sub(a, b), a))  // unit a-b + a
 
@@ -120,6 +249,16 @@ function App() {
         // console.log(a,b,c,d)
         // console.log(stateRef.current)
     }
+
+    useEffect(() => {
+        function resize() {
+            setScreen({innerWidth: window.innerWidth, innerHeight: window.innerHeight})
+        }
+
+        window.addEventListener('resize', resize)
+
+        return () => window.removeEventListener('resize', resize)
+    }, [])
 
   return (
     <div className="App" onMouseMove={mouseMoveHandler}>
@@ -148,6 +287,12 @@ function App() {
             left: c2.x
         }}>
         </div>
+
+        <svg viewBox={'0 0 1440 455'} style={{
+            position: "absolute",
+        }}>
+            <polygon points = {shadowMatrix}/>
+        </svg>
     </div>
   );
 }
