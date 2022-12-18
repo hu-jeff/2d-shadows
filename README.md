@@ -29,8 +29,8 @@ I seperated the calculations into 2 cases,
 Let $v$ be the mouse vector.
 
 If $v.y < 0$, I checked for an intersection when $y=0$. Since the mouse vector was going towards the top of the screen.
-This way, we can find the $x$ value that would exist when $y=0$ so,
+This way, we can find the $x$ value that would exist when $y=0$ so, take $(a_1, a_2), (b_1, b_2) =$ the box corner, the mouse position.
 
-\[
-y=5
-\]
+$$y=a_2=\frac{b_2-a_2}{b_1-a_1}(x-a_1) \implies x=a_1+\left(\frac{b_2-a_2}{b_1-a_1}\right)^{-1}(-a_2)$$
+
+However, in the case that $x$ would not be in the screen dimensions, I would redo the calculation by solving for $y$ when x is 0 or the maximum screen width. This way, with the points of the corners and their intersection with the screen, I can create a polygon representing the shadow.
