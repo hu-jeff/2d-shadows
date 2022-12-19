@@ -4,7 +4,7 @@
     background-color: #87ceeb;
     position:relative;
 
-    animation: rotate infinite 30s linear;
+    animation: rotate infinite 10s linear;
 }
 
 .box > div {

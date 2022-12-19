@@ -247,17 +247,6 @@ function App() {
         console.log(corners.a.y)
 
         setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} ${shadowEndPoints.b.x},${shadowEndPoints.b.y} ${shadowEndPoints.a.x},${shadowEndPoints.a.y}`)
-
-        // const temp3 = unit(add(sub(a, b), a))  // unit a-b + a
-
-        // seta1ref.current(add({x: ca.x * 50, y: ca.y * 50}, a))
-        // mref.current(add({x: ma.x * 50, y: ma.y * 50}, a))
-        // setc2ref.current(add({x: ba.x * 50, y: ba.y * 50}, a))
-        // console.log(Math.acos(dot(ca, ma))*180/3.14159)
-
-        // console.log(temp)
-        // console.log(a,b,c,d)
-        // console.log(stateRef.current)
     }
 
     useEffect(() => {
