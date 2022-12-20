@@ -2,7 +2,7 @@
 
 This project showcases how it is possible to create 2D shadows off of boxes by treating the mouse as a light source.
 
-Link:
+Link: https://hu-jeff.github.io/2d-shadows/
 
 ## How I made it
 
