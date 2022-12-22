@@ -41,6 +41,22 @@ function App() {
     const screenRef = useRef({screen: screen, setScreen: setScreen})
     screenRef.current = {screen: screen, setScreen: setScreen}
 
+    const [screenLeftCorner, setScreenLeftCorner] = useState(false);
+    const screenLeftCornerRef = useRef({screenLeftCorner: screenLeftCorner, setScreenLeftCorner: setScreenLeftCorner})
+    screenLeftCornerRef.current = {screenLeftCorner: screenLeftCorner, setScreenLeftCorner: setScreenLeftCorner}
+
+    const [screenRightCorner, setScreenRightCorner] = useState(false);
+    const screenRightCornerRef = useRef({screenRightCorrner: screenRightCorner, setScreenRightCorner: setScreenRightCorner})
+    screenRightCornerRef.current = {screenRightCorrner: screenRightCorner, setScreenRightCorner: setScreenRightCorner}
+
+    const [screenBotLeftCorner, setScreenBotLeftCorner] = useState(false);
+    const screenBotLeftCornerRef = useRef({screenBotLeftCorner: screenBotLeftCorner, setScreenBotLeftCorner: setScreenBotLeftCorner})
+    screenBotLeftCornerRef.current = {screenBotLeftCorner: screenBotLeftCorner, setScreenBotLeftCorner: setScreenBotLeftCorner}
+
+    const [screenBotRightCorner, setScreenBotRightCorner] = useState(false);
+    const screenBotRightCornerRef = useRef({screenBotRightCorner: screenBotRightCorner, setScreenBotRightCorner: setScreenBotRightCorner})
+    screenBotRightCornerRef.current = {screenBotRightCorner: screenBotRightCorner, setScreenBotRightCorner: setScreenBotRightCorner}
+
     const dot = (u: Vector, v:Vector) => {
         return u.x * v.x + u.y * v.y
     }
@@ -66,8 +82,49 @@ function App() {
         return (angle1 <= 3.14159 / 2 && angle2 > 3.14159/2) || (angle1 > 3.14159 / 2 && angle2 <= 3.14159/2)
     }
 
+    const centerOfPoints = (array: Array<Vector>) => {
+        let x = 0
+        let y = 0
+
+        for (let i = 0; i < array.length; i++) {
+            x += array[i].x
+            y += array[i].y
+        }
+
+        return {x: x/array.length, y: y/array.length}
+    }
+
+
+    //TODO: check intersection line corners from box
+
+    const resetScreenCorners = () => {
+        screenLeftCornerRef.current.setScreenLeftCorner(false)
+        screenRightCornerRef.current.setScreenRightCorner(false)
+        screenBotLeftCornerRef.current.setScreenBotLeftCorner(false)
+        screenBotRightCornerRef.current.setScreenBotRightCorner(false)
+    }
+
+    const changeTLScreen = (bool: boolean) => {
+        screenLeftCornerRef.current.setScreenLeftCorner(bool)
+    }
+    const changeTRScreen = (bool: boolean) => {
+        screenRightCornerRef.current.setScreenRightCorner(bool)
+    }
+
+    const changeBLScreen = (bool: boolean) => {
+        screenBotLeftCornerRef.current.setScreenBotLeftCorner(bool)
+    }
+
+    const changeBRScreen = (bool: boolean) => {
+        screenBotRightCornerRef.current.setScreenBotRightCorner(bool)
+    }
+
     const positionsHandler = ({a,b,c,d,e}: {a: Vector, b: Vector, c: Vector, d: Vector, e:Vector}) => {
         //c to a on a
+        let isTL = false
+        let isTR = false
+        let isBL = false
+        let isBR = false
 
         const corners = {a: {x:0, y:0}, b: {x:0,y:0}}
         let changeCorner = (a: Vector) => {
@@ -90,6 +147,18 @@ function App() {
             shadowEndPoints.b = a
         }
 
+        const intersection = (a: Vector, b: Vector, c:Vector, d:Vector) => { // intersection ab with cd
+            const det = (b.x - a.x) * (d.y - c.y) - (d.x - c.x) * (b.y - a.y)
+            if (det === 0) {
+                return false;
+            } else {
+                const k = ((d.y - c.y) * (d.x - a.x) + (c.x - d.x) * (d.y - a.y)) / det
+                const m = ((a.y - b.y) * (d.x - a.x) + (b.x - a.x) * (d.y - a.y)) / det
+
+                return ((-0.01 < k && k < 1.01) && (-0.01 < m && m < 1.01))
+            }
+        }
+
         const m = stateRef.current
         const screen = screenRef.current.screen
 
@@ -106,6 +175,7 @@ function App() {
 
             const [b1, b2] = [a.x, a.y]
             const [a1, a2] = [m.x, m.y]
+
             if (ma.y <= 0) { //vector heading towards top of screen
                 const x =(b1-a1)/(b2-a2)*(-a2)+a1
                 if (x< 0) {
@@ -124,6 +194,7 @@ function App() {
                 } else if (x > screen.innerWidth) {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
+
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
             }
@@ -153,6 +224,8 @@ function App() {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
                     setShadowEndPoints({x: x, y: 0})
+
+
                 }
 
                 setShadowEndPoints = setShadowEndPoints2
@@ -163,6 +236,7 @@ function App() {
                 } else if (x > screen.innerWidth) {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
+
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
             }
@@ -191,6 +265,8 @@ function App() {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
                     setShadowEndPoints({x: x, y: 0})
+
+
                 }
 
                 setShadowEndPoints = setShadowEndPoints2
@@ -201,6 +277,7 @@ function App() {
                 } else if (x > screen.innerWidth) {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
+
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
 
@@ -228,6 +305,7 @@ function App() {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
                     setShadowEndPoints({x: x, y: 0})
+
                 }
 
                 setShadowEndPoints = setShadowEndPoints2
@@ -238,15 +316,54 @@ function App() {
                 } else if (x > screen.innerWidth) {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
+
                     setShadowEndPoints({x: x, y: screen.innerHeight})
                 }
 
                 setShadowEndPoints = setShadowEndPoints2
             }
         }
-        console.log(corners.a.y)
 
-        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} ${shadowEndPoints.b.x},${shadowEndPoints.b.y} ${shadowEndPoints.a.x},${shadowEndPoints.a.y}`)
+        if (!isTL) {
+            changeTLScreen(false);
+        }
+
+        if (!isTR) {
+            changeTRScreen(false);
+        }
+
+        if (!isBL) {
+            changeBLScreen(false)
+        }
+
+        if (!isBR) {
+            changeBRScreen(false)
+        }
+
+        const points = [
+            corners.a,
+            corners.b,
+            shadowEndPoints.a,
+            shadowEndPoints.b
+        ]
+        if (intersection(stateRef.current, {x: 0, y:0}, shadowEndPoints.a, shadowEndPoints.b)) {
+            points.push({x: 0, y:0})
+        }
+        if (intersection(stateRef.current, {x: screenRef.current.screen.innerWidth, y:0}, shadowEndPoints.a, shadowEndPoints.b)) {
+            points.push({x: screenRef.current.screen.innerWidth, y:0})
+        }
+        if (intersection(stateRef.current, {x: 0, y:screenRef.current.screen.innerHeight}, shadowEndPoints.a, shadowEndPoints.b)) {
+            points.push({x:0, y:screenRef.current.screen.innerHeight})
+        }
+        if (intersection(stateRef.current, {x: screenRef.current.screen.innerWidth, y:screenRef.current.screen.innerHeight}, shadowEndPoints.a, shadowEndPoints.b)) {
+            points.push({x: screenRef.current.screen.innerWidth, y:screenRef.current.screen.innerHeight})
+        }
+
+
+
+        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} 
+        ${shadowEndPoints.b.x},${shadowEndPoints.b.y }
+        ${shadowEndPoints.a.x},${shadowEndPoints.a.y }`)
     }
 
     useEffect(() => {

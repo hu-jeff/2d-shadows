@@ -46,7 +46,7 @@ function Box({sendPos}: BoxProps) {
             }
 
             sendPos(positionArray)
-        }, 10);
+        }, 0);
 
         return () => {
             clearTimeout(interval);
