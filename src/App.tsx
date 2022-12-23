@@ -95,7 +95,22 @@ function App() {
     }
 
 
-    //TODO: check intersection line corners from box
+    const sortPoints = (array: Array<any>) => { // TODO: change sort to a custom quicksort
+        let startAng: number;
+        const center = centerOfPoints(array)
+
+        array.forEach(point =>{
+            var ang = Math.atan2(point.y - center.y,point.x - center.x);
+            if(!startAng){ startAng = ang }
+            else {
+                if(ang < startAng){  // ensure that all points are clockwise of the start point
+                    ang += 6.28318;
+                }
+            }
+            point.angle = ang; // add the angle to the point
+        })
+        array.sort((a,b) => a.angle - b.angle)
+    }
 
     const resetScreenCorners = () => {
         screenLeftCornerRef.current.setScreenLeftCorner(false)
@@ -265,8 +280,6 @@ function App() {
                     setShadowEndPoints({x: screen.innerWidth, y:(b2-a2)/(b1-a1) * (screen.innerWidth-a1) + a2})
                 } else {
                     setShadowEndPoints({x: x, y: 0})
-
-
                 }
 
                 setShadowEndPoints = setShadowEndPoints2
@@ -359,11 +372,15 @@ function App() {
             points.push({x: screenRef.current.screen.innerWidth, y:screenRef.current.screen.innerHeight})
         }
 
+        sortPoints(points)
 
+        let s = ''
 
-        setShadowMatrixref.current(`${corners.a.x},${corners.a.y} ${corners.b.x},${corners.b.y} 
-        ${shadowEndPoints.b.x},${shadowEndPoints.b.y }
-        ${shadowEndPoints.a.x},${shadowEndPoints.a.y }`)
+        for (let i = 0; i < points.length; i++) {
+            s += ` ${points[i].x},${points[i].y}`
+        }
+
+        setShadowMatrixref.current(s)
     }
 
     useEffect(() => {
