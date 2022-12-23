@@ -1,4 +1,5 @@
-import React, {MouseEventHandler, useEffect, useMemo, useRef, useState} from 'react';
+import React, {CSSProperties, MouseEventHandler, useEffect, useMemo, useRef, useState} from 'react';
+
 import Box from "./Box";
 import './Shadow.css';
 import {Simulate} from "react-dom/test-utils";
@@ -10,10 +11,15 @@ interface Vector {
     y: number
 }
 
-function Shadow() {
-    const [mousePosition, setMousePosition] = useState({x: 0,y: 0});
-    const stateRef = useRef(mousePosition);
-    stateRef.current = mousePosition;
+interface BoxHolderProps {
+    style: CSSProperties
+    mouse: Vector
+}
+
+function Shadow(props: BoxHolderProps) {
+    const [mousePosition, setMousePosition] = useState(props.mouse);
+    const stateRef = useRef(props.mouse);
+    stateRef.current = props.mouse;
 
     const [a1, seta1] = useState({x: 0, y: 0})
     const seta1ref = useRef(seta1)
@@ -398,7 +404,8 @@ function Shadow() {
         }}>
             <polygon points = {shadowMatrix}/>
         </svg>
-        <div className="box-holder">
+        <div className="box-holder"
+        style={props.style}>
             <Box sendPos = {positionsHandler}/>
         </div>
         <div className="test" style={{
@@ -423,8 +430,6 @@ function Shadow() {
             left: c2.x
         }}>
         </div>
-
-
     </div>
   );
 }

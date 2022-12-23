@@ -9,6 +9,7 @@
 .box-holder {
   width: 50vw;
   height: 50vh;
+  display: flex;
 }
 
 .test {
