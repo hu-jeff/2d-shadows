@@ -1,8 +1,7 @@
 import React, {MouseEventHandler, useEffect, useMemo, useRef, useState} from 'react';
 import Box from "./Box";
-import './App.css';
+import './Shadow.css';
 import {Simulate} from "react-dom/test-utils";
-import change = Simulate.change;
 
 const throttle = require('lodash.throttle');
 
@@ -11,8 +10,7 @@ interface Vector {
     y: number
 }
 
-function App() {
-    const boxRef = useRef();
+function Shadow() {
     const [mousePosition, setMousePosition] = useState({x: 0,y: 0});
     const stateRef = useRef(mousePosition);
     stateRef.current = mousePosition;
@@ -394,7 +392,7 @@ function App() {
     }, [])
 
   return (
-    <div className="App" onMouseMove={mouseMoveHandler}>
+    <div className="Shadow" onMouseMove={mouseMoveHandler}>
         <svg viewBox={`0 0 ${screen.innerWidth} ${screen.innerHeight}`} style={{ //default 455 height
             position: "absolute",
         }}>
@@ -431,4 +429,4 @@ function App() {
   );
 }
 
-export default App;
+export default Shadow;
