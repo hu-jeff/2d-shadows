@@ -12,7 +12,9 @@ export default function App() {
     return (
         <div className={'App'} onMouseMove={onMouse}>
             <Shadow style={{}} mouse={mouse}/>
-            <Shadow style={{}} mouse={mouse}/>
+            <Shadow style={{flexDirection: 'column-reverse'}} mouse={mouse}/>
+            <Shadow style={{flexDirection: 'row-reverse'}} mouse={mouse}/>
+            <Shadow style={{alignItems: 'flex-end', justifyContent: 'flex-end'}} mouse={mouse}/>
         </div>
     )
 }
